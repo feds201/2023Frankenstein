@@ -4,7 +4,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.MotControllerJNI;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-class Shooter {
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class Shooter extends SubsystemBase {
 
     TalonFX shooterMotor;
     boolean input;
@@ -35,11 +37,15 @@ class Shooter {
 
 
     public void shootBalls(){
-        shooterMotor.set(ControlMode.PercentOutput, 0.1);
+        shooterMotor.set(ControlMode.PercentOutput, -0.35);
         input = true;
     }
     public void stopShooting(){
         shooterMotor.set(ControlMode.PercentOutput, 0);
         input = false;
+    }
+    public void reverseShootBalls(){
+        shooterMotor.set(ControlMode.PercentOutput, 0.2);
+        input = true;
     }
 }

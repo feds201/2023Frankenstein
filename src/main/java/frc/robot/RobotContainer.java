@@ -14,13 +14,17 @@ import frc.robot.constants.OIConstants;
 import frc.robot.commands.auton.BossDriveChallenge;
 import frc.robot.commands.exampleCommands.LockWheels;
 import frc.robot.commands.pigeon.ReportingCommand;
+import frc.robot.commands.shooter.reverseShootBalls;
+import frc.robot.commands.shooter.shootBalls;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.pigeon.Pigeon2Subsystem;
 import frc.robot.subsystems.pigeon.ReportingSubsystem;
 
 public class RobotContainer {
     private final SwerveSubsystem s_swerve;
+    private final Shooter s_shooter;
     public static final Pigeon2Subsystem s_pigeon2 = new Pigeon2Subsystem(SwerveConstants.pigeonID);
     private final ReportingSubsystem s_reportingSubsystem;
 
@@ -36,6 +40,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         s_swerve = new SwerveSubsystem();
+        s_shooter = new Shooter();
         s_reportingSubsystem = new ReportingSubsystem();
         m_autonChooser.addOption("Boss Drive Challenge", new BossDriveChallenge(s_swerve));
         Shuffleboard.getTab("Autons").add(m_autonChooser);
@@ -43,7 +48,7 @@ public class RobotContainer {
         s_swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_swerve,
-                        () -> -slewRateLimiterY.calculate(m_driveController.getLeftY()), 
+                        () -> -slewRateLimiterY.calculate(m_driveController.getLeftY()),
                         () -> -slewRateLimiterX.calculate(m_driveController.getLeftX()),
                         () -> -m_driveController.getRightX(),
                         () -> SwerveConstants.fieldCentric)); // always field for now!
@@ -55,7 +60,7 @@ public class RobotContainer {
     }
 
     private void configureDriverButtonBindings() {
-        //Reset Gyro / LockWheels
+        // Reset Gyro / LockWheels
         m_driveController.y().onTrue(
                 new InstantCommand(() -> s_swerve.zeroGyro()));
 
@@ -65,8 +70,10 @@ public class RobotContainer {
         m_driveController.start().onTrue(new LockWheels(s_swerve));
     }
 
-    private void configureOperatorButtonBindings() {}
-
+    private void configureOperatorButtonBindings() {
+        m_operatorController.x().whileTrue(new shootBalls(s_shooter));    
+        m_operatorController.a().whileTrue(new reverseShootBalls(s_shooter));
+    }
     public Command getAutonomousCommand() {
         return m_autonChooser.getSelected();
     }
