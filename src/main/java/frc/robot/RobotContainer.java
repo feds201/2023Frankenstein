@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.PowerConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.OIConstants;
+import frc.robot.commands.auton.BossDriveChallenge;
 import frc.robot.commands.exampleCommands.LockWheels;
 import frc.robot.commands.pigeon.ReportingCommand;
 import frc.robot.commands.swerve.TeleopSwerve;
@@ -36,7 +37,7 @@ public class RobotContainer {
     public RobotContainer() {
         s_swerve = new SwerveSubsystem();
         s_reportingSubsystem = new ReportingSubsystem();
-
+        m_autonChooser.addOption("Boss Drive Challenge", new BossDriveChallenge(s_swerve));
         Shuffleboard.getTab("Autons").add(m_autonChooser);
 
         s_swerve.setDefaultCommand(
