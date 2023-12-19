@@ -24,7 +24,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void collectBalls() {
-        intakeMotor.set(ControlMode.PercentOutput, 0.1);
+        intakeMotor.set(ControlMode.PercentOutput, 0.3);
         input = true;
     }
 

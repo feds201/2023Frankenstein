@@ -23,15 +23,15 @@ public class BoxGrabber extends SubsystemBase{
         }
     }
 
-    public void Change(){
-        if(isExtended()){
-            System.out.println("Retract!");
-            extended = false;
-        }else{
-            System.out.println("Extend!");
-            extended = true;
-        }
-    }
+    // public void Change(){
+    //     if(isExtended()){
+    //         System.out.println("Retract!");
+    //         extended = false;
+    //     }else{
+    //         System.out.println("Extend!");
+    //         extended = true;
+    //     }
+    // }
 
     /**
      * 
