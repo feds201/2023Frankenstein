@@ -15,12 +15,17 @@ import frc.robot.commands.BoxGrabber.ExtendBoxGrabber;
 import frc.robot.commands.BoxGrabber.RetractBoxGrabber;
 import frc.robot.commands.Intake.RunIntake;
 import frc.robot.commands.auton.BossDriveChallenge;
+import frc.robot.commands.claw.ExtendClawPiston;
+import frc.robot.commands.claw.RetractClawPiston;
+import frc.robot.commands.claw.UnwindClawPulley;
+import frc.robot.commands.claw.WindClawPulley;
 import frc.robot.commands.exampleCommands.LockWheels;
 import frc.robot.commands.pigeon.ReportingCommand;
 import frc.robot.commands.shooter.ReverseShootBalls;
 import frc.robot.commands.shooter.ShootBalls;
 import frc.robot.commands.swerve.TeleopSwerve;
 import frc.robot.subsystems.BoxGrabber.BoxGrabber;
+import frc.robot.subsystems.Claw.Claw;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
@@ -33,6 +38,7 @@ public class RobotContainer {
     private final Intake i_intake;
     private final BoxGrabber b_boxGrabber;
     private final Shooter s_shooter;
+    private final Claw s_claw;
 
     public static final Pigeon2Subsystem s_pigeon2 = new Pigeon2Subsystem(SwerveConstants.pigeonID);
     private final ReportingSubsystem s_reportingSubsystem;
@@ -53,6 +59,7 @@ public class RobotContainer {
         i_intake = new Intake();
         b_boxGrabber = new BoxGrabber();
         s_shooter = new Shooter();
+        s_claw = new Claw();
 
         s_reportingSubsystem = new ReportingSubsystem();
         m_autonChooser.addOption("Boss Drive Challenge", new BossDriveChallenge(s_swerve));
@@ -81,21 +88,26 @@ public class RobotContainer {
                 new InstantCommand(() -> s_swerve.zeroGyro180()));
 
         m_driveController.start().onTrue(new LockWheels(s_swerve));
+
+        // INTAKE
+        m_driveController.rightTrigger().whileTrue(new RunIntake(i_intake));
+        
+        // BOX GRABBER
+        m_driveController.leftTrigger().onTrue(new ExtendBoxGrabber(b_boxGrabber));
+        m_driveController.leftBumper().onTrue(new RetractBoxGrabber(b_boxGrabber));
     }
 
     private void configureOperatorButtonBindings() {
-        // INTAKE
-        m_operatorController.rightTrigger().whileTrue(new RunIntake(i_intake));
-
-        // BOX GRABBER
-        m_operatorController.b().onTrue(new ExtendBoxGrabber(b_boxGrabber));
-        m_operatorController.x().onTrue(new RetractBoxGrabber(b_boxGrabber));
-
         // SHOOTER
         m_operatorController.leftTrigger().whileTrue(new ShootBalls(s_shooter));
         m_operatorController.leftBumper().whileTrue(new ReverseShootBalls(s_shooter));
 
         // CLAW
+        m_operatorController.axisGreaterThan(0, 0.3).whileTrue(new WindClawPulley(s_claw));
+        m_operatorController.axisLessThan(0, -0.3).whileTrue(new UnwindClawPulley(s_claw));
+
+        m_operatorController.a().onTrue(new ExtendClawPiston(s_claw));
+        m_operatorController.b().onTrue(new RetractClawPiston(s_claw));
     }
 
     public Command getAutonomousCommand() {
