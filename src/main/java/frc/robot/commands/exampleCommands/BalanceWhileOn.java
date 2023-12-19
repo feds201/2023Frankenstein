@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.constants.AutonConstants;
 import frc.robot.constants.SwerveConstants;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 public class BalanceWhileOn extends CommandBase {
     private PIDController rollController;

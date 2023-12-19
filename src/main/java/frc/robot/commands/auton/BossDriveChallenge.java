@@ -1,7 +1,7 @@
 package frc.robot.commands.auton;
 
 import frc.robot.constants.SwerveConstants;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Swerve.SwerveSubsystem;
 import frc.robot.commands.exampleCommands.LockWheels;
 
 

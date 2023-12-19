@@ -11,18 +11,19 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.PowerConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.OIConstants;
-import frc.robot.commands.BoxGrabber.RunBoxGrabber;
+import frc.robot.commands.BoxGrabber.ExtendBoxGrabber;
+import frc.robot.commands.BoxGrabber.RetractBoxGrabber;
 import frc.robot.commands.Intake.RunIntake;
 import frc.robot.commands.auton.BossDriveChallenge;
 import frc.robot.commands.exampleCommands.LockWheels;
 import frc.robot.commands.pigeon.ReportingCommand;
-import frc.robot.commands.shooter.reverseShootBalls;
-import frc.robot.commands.shooter.shootBalls;
+import frc.robot.commands.shooter.ReverseShootBalls;
+import frc.robot.commands.shooter.ShootBalls;
 import frc.robot.commands.swerve.TeleopSwerve;
-import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.BoxGrabber.BoxGrabber;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.Swerve.SwerveSubsystem;
 import frc.robot.subsystems.pigeon.Pigeon2Subsystem;
 import frc.robot.subsystems.pigeon.ReportingSubsystem;
 
@@ -32,7 +33,7 @@ public class RobotContainer {
     private final Intake i_intake;
     private final BoxGrabber b_boxGrabber;
     private final Shooter s_shooter;
-  
+
     public static final Pigeon2Subsystem s_pigeon2 = new Pigeon2Subsystem(SwerveConstants.pigeonID);
     private final ReportingSubsystem s_reportingSubsystem;
 
@@ -83,12 +84,20 @@ public class RobotContainer {
     }
 
     private void configureOperatorButtonBindings() {
-        m_operatorController.y().whileTrue(new RunIntake(i_intake));
-        m_operatorController.b().onTrue(new RunBoxGrabber(b_boxGrabber));
-        m_operatorController.x().whileTrue(new shootBalls(s_shooter));    
-        m_operatorController.a().whileTrue(new reverseShootBalls(s_shooter));
+        // INTAKE
+        m_operatorController.rightTrigger().whileTrue(new RunIntake(i_intake));
+
+        // BOX GRABBER
+        m_operatorController.b().onTrue(new ExtendBoxGrabber(b_boxGrabber));
+        m_operatorController.x().onTrue(new RetractBoxGrabber(b_boxGrabber));
+
+        // SHOOTER
+        m_operatorController.leftTrigger().whileTrue(new ShootBalls(s_shooter));
+        m_operatorController.leftBumper().whileTrue(new ReverseShootBalls(s_shooter));
+
+        // CLAW
     }
-  
+
     public Command getAutonomousCommand() {
         return m_autonChooser.getSelected();
     }
