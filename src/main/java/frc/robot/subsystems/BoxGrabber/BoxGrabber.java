@@ -1,14 +1,17 @@
 package frc.robot.subsystems.BoxGrabber;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-class BoxGrabber{
+public class BoxGrabber extends SubsystemBase{
 
     DoubleSolenoid boxGrabber;
     Boolean extended;
 
     public BoxGrabber() {
-        // boxGrabber = new DoubleSolenoid(0);
+        boxGrabber = new DoubleSolenoid(02, PneumaticsModuleType.CTREPCM, 1, 0);
         extended = false;
     }
 
@@ -28,5 +31,17 @@ class BoxGrabber{
             System.out.println("Extend!");
             extended = true;
         }
+    }
+
+    /**
+     * 
+     */
+    public void extendBoxGrabber(){
+        boxGrabber.set(Value.kReverse);
+        extended = true;
+    }
+    public void retractBoxGrabber(){
+        boxGrabber.set(Value.kForward);
+        extended = false;
     }
 }
