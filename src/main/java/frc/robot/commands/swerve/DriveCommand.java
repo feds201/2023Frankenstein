@@ -2,7 +2,7 @@ package frc.robot.commands.swerve;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 public class DriveCommand extends CommandBase {
     private final SwerveSubsystem s_swerve;

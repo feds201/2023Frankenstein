@@ -10,7 +10,8 @@ public class LimelightSubsystem extends SubsystemBase {
     // private Variable declarartion
     private NetworkTable table = NetworkTableInstance.getDefault().getTable(LimelightVariables.moduleName);
 
-    public LimelightSubsystem() {}
+    public LimelightSubsystem() {
+    }
 
     public static class LimelightVariables {
         public static String moduleName = "limelight";// for furure refernce
@@ -23,7 +24,7 @@ public class LimelightSubsystem extends SubsystemBase {
         public static double tid;// Target id
     }
 
-    public void periodic_variables_read(){
+    public void periodic_variables_read() {
         LimelightVariables.tx = table.getEntry("tx").getDouble(0.0);
         LimelightVariables.ty = table.getEntry("ty").getDouble(0.0);
         LimelightVariables.ta = table.getEntry("ta").getDouble(0.0);
@@ -32,7 +33,9 @@ public class LimelightSubsystem extends SubsystemBase {
         LimelightVariables.pipelineName = table.getEntry("pipeline").getDouble(0);
         LimelightVariables.tid = table.getEntry("tid").getDouble(0.0);
     }
+
     public void periodic_variables_write(){
+
         // SmartDashboard.putBooleanArray("Target", LimelightFunctions.getTx());
         SmartDashboard.putNumber("LimelightX", LimelightFunctions.getTx());
         SmartDashboard.putNumber("LimelightY", LimelightFunctions.getTy());
@@ -46,7 +49,7 @@ public class LimelightSubsystem extends SubsystemBase {
     public void periodic() {
         periodic_variables_read();
         periodic_variables_write();
-    
+
     };
 
     public static class LimelightFunctions {
@@ -65,12 +68,14 @@ public class LimelightSubsystem extends SubsystemBase {
         public static boolean getTv() {
             return LimelightVariables.tv;
         }
+
         /**
          * @return Returns the ID of the Tag
          */
         public static double getTid() {
             return LimelightVariables.tid;
         }
+
     }
 
     /**
@@ -97,6 +102,14 @@ public class LimelightSubsystem extends SubsystemBase {
         if (areaChange > areaChangeThreshold) {return "forward";} else if (areaChange < -areaChangeThreshold) {return "backward";} else {return "stop";}
 }
 
+
+        public static int setOffset() {
+            return 0;
+        }
+    }
+
+  
+
     /**
      * Calculates the distance to a target using Limelight camera data.
      *
@@ -105,14 +118,15 @@ public class LimelightSubsystem extends SubsystemBase {
      * @param a1 The mounting angle of the camera in degrees.
      * @param a2 The Y angle to the target in degrees.
      * @return The estimated distance to the target in inches.
-     */
-     public static class LimelightDistanceCalculator {
+
+    public static class LimelightDistanceCalculator {
+
 
         // Function to convert degrees to radians
         private static double toRadians(double degrees) {
             return degrees * (Math.PI / 180.0);
         }
-    
+
         // Standalone function to calculate distance using Limelight data
         public static double calculateDistance(double h1, double h2, double a1, double a2) {
             // Convert angles to radians
@@ -126,22 +140,7 @@ public class LimelightSubsystem extends SubsystemBase {
         }
      }
 
-    /**
-     * @param pipeline 0-9
-     */
-    public void setPipeline(Integer pipeline) {
-        table.getEntry("pipeline").setNumber(pipeline);
-    }
-   
-    /**
-     * @param mode 0 = Off, 1 = Blink, 2 = On
-     */
-    public void setLEDMode(Integer mode) {
-        table.getEntry("ledMode").setNumber(mode);
-    }
-    
-    /**
-     * @param mode 0 = Vision Processing, 1 = Driver Cam 
+
      */
     public void setCameraMode(Integer mode) {
         table.getEntry("camMode").setNumber(mode);
@@ -153,18 +152,18 @@ public class LimelightSubsystem extends SubsystemBase {
     public boolean seesTarget() {
         return LimelightFunctions.getTv();
     }
-    
+
     public Translation2d getDirection(double d) {
         return null;
     }
 
-    public double getTag_id(){
+
+
+    public double getTag_id() {
         return (double) LimelightVariables.tid;
     }
 
-    
 }
-
 
 // Documents used to Code this file
 // https://docs.limelightvision.io/docs/docs-limelight/pipeline-retro/retro-theory
