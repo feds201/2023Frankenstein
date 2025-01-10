@@ -34,7 +34,8 @@ public class LimelightSubsystem extends SubsystemBase {
         LimelightVariables.tid = table.getEntry("tid").getDouble(0.0);
     }
 
-    public void periodic_variables_write() {
+    public void periodic_variables_write(){
+
         // SmartDashboard.putBooleanArray("Target", LimelightFunctions.getTx());
         SmartDashboard.putNumber("LimelightX", LimelightFunctions.getTx());
         SmartDashboard.putNumber("LimelightY", LimelightFunctions.getTy());
@@ -75,53 +76,39 @@ public class LimelightSubsystem extends SubsystemBase {
             return LimelightVariables.tid;
         }
 
+    }
+
+    /**
+    * Determines the direction of the limelight based on the position of the camera.
+    *
+    * @param threshold This threshold is used to control the frequency of direction changes.
+    *                 (A higher threshold leads to slower changes in direction.)
+    * @return A String indicating the direction of the limelight. Possible values are "left," "right," or "centre".
+    */
+    public String getLateral(double threshold) {
+        if (LimelightVariables.tx < threshold) {return "left";} else if (LimelightVariables.tx < -threshold) {return "right";} else {return "centre";}
+    }
+
+    /**
+     * Determines the robot movement direction based on the change in the limelight's target area.
+     *
+     * @param initialArea The initial area of the target when the movement command is started.
+     * @param currentArea The current area of the target.
+     * @param areaChangeThreshold The threshold for considering a significant change in area.
+     * @return A string indicating the movement direction: "forward", "backward", or "stop".
+     */
+    public String getTraverse(double initialArea, double currentArea, double areaChangeThreshold) {
+        double areaChange = currentArea - initialArea;
+        if (areaChange > areaChangeThreshold) {return "forward";} else if (areaChange < -areaChangeThreshold) {return "backward";} else {return "stop";}
+}
+
+
         public static int setOffset() {
             return 0;
         }
     }
 
-    /**
-     * Determines the direction of the limelight based on the position of the
-     * camera.
-     *
-     * @param threshold This threshold is used to control the frequency of direction
-     *                  changes.
-     *                  (A higher threshold leads to slower changes in direction.)
-     * @return A String indicating the direction of the limelight. Possible values
-     *         are "left," "right," or "centre".
-     */
-    public String getLateral(double threshold) {
-        if (LimelightVariables.tx < threshold) {
-            return "left";
-        } else if (LimelightVariables.tx < -threshold) {
-            return "right";
-        } else {
-            return "centre";
-        }
-    }
-
-    /**
-     * Determines the robot movement direction based on the change in the
-     * limelight's target area.
-     *
-     * @param initialArea         The initial area of the target when the movement
-     *                            command is started.
-     * @param currentArea         The current area of the target.
-     * @param areaChangeThreshold The threshold for considering a significant change
-     *                            in area.
-     * @return A string indicating the movement direction: "forward", "backward", or
-     *         "stop".
-     */
-    public String getTraverse(double initialArea, double currentArea, double areaChangeThreshold) {
-        double areaChange = currentArea - initialArea;
-        if (areaChange > areaChangeThreshold) {
-            return "forward";
-        } else if (areaChange < -areaChangeThreshold) {
-            return "backward";
-        } else {
-            return "stop";
-        }
-    }
+  
 
     /**
      * Calculates the distance to a target using Limelight camera data.
@@ -131,8 +118,9 @@ public class LimelightSubsystem extends SubsystemBase {
      * @param a1 The mounting angle of the camera in degrees.
      * @param a2 The Y angle to the target in degrees.
      * @return The estimated distance to the target in inches.
-     */
+
     public static class LimelightDistanceCalculator {
+
 
         // Function to convert degrees to radians
         private static double toRadians(double degrees) {
@@ -144,30 +132,15 @@ public class LimelightSubsystem extends SubsystemBase {
             // Convert angles to radians
             double a1Radians = toRadians(a1);
             double a2Radians = toRadians(a2);
-
+    
             // Calculate distance using the formula
             double distance = (h2 - h1) / Math.tan(a1Radians + a2Radians);
-
+    
             return distance;
         }
-    }
+     }
 
-    /**
-     * @param pipeline 0-9
-     */
-    public void setPipeline(Integer pipeline) {
-        table.getEntry("pipeline").setNumber(pipeline);
-    }
 
-    /**
-     * @param mode 0 = Off, 1 = Blink, 2 = On
-     */
-    public void setLEDMode(Integer mode) {
-        table.getEntry("ledMode").setNumber(mode);
-    }
-
-    /**
-     * @param mode 0 = Vision Processing, 1 = Driver Cam
      */
     public void setCameraMode(Integer mode) {
         table.getEntry("camMode").setNumber(mode);
@@ -183,6 +156,8 @@ public class LimelightSubsystem extends SubsystemBase {
     public Translation2d getDirection(double d) {
         return null;
     }
+
+
 
     public double getTag_id() {
         return (double) LimelightVariables.tid;
